@@ -26,14 +26,15 @@ import React, { Component } from 'react'
 import {
     Modal,
     View,
+    ViewPropTypes,
     TouchableWithoutFeedback,
     Text,
     Platform,
-    SafeAreaView,
     ScrollView
 } from 'react-native'
-
 const { OS } = Platform;
+
+import PropTypes from 'prop-types';
 
 class Dialog extends Component {
 
@@ -43,7 +44,6 @@ class Dialog extends Component {
         return (
             <View style={[{
                 width: '100%',
-                flexShrink: 1,
                 padding: 24,
                 paddingTop: 20
             }, contentStyle]}>
@@ -123,6 +123,7 @@ class Dialog extends Component {
                 onShow={onShow}
                 onOrientationChange={onOrientationChange}
                 supportedOrientations={supportedOrientations}
+                statusBarTranslucent
             >
                 <ScrollView
                     bounces={false}
@@ -141,37 +142,51 @@ class Dialog extends Component {
                         backgroundColor: "#000000AA",
                         padding: 24
                     }, overlayStyle]}>
-                        <SafeAreaView style={{ flex: 1 }}>
-                            {this._renderOutsideTouchable(onTouchOutside)}
+                        {this._renderOutsideTouchable(onTouchOutside)}
 
-                            <View style={[{
-                                backgroundColor: dialogBackgroundColor,
-                                width: '100%',
-                                maxHeight: '100%',
-                                shadowOpacity: 0.24,
-                                borderRadius: dialogBorderRadius,
-                                elevation: 4,
-                                shadowOffset: {
-                                    height: 4,
-                                    width: 2
-                                }
-                            }, dialogStyle]}>
+                        <View style={[{
+                            backgroundColor: dialogBackgroundColor,
+                            width: '100%',
+                            shadowOpacity: 0.24,
+                            borderRadius: dialogBorderRadius,
+                            elevation: 4,
+                            shadowOffset: {
+                                height: 4,
+                                width: 2
+                            }
+                        }, dialogStyle]}>
 
-                                {this.renderTitle()}
+                            {this.renderTitle()}
 
-                                {this.renderContent()}
+                            {this.renderContent()}
 
-                                {this.renderButtons()}
+                            {this.renderButtons()}
 
-                            </View>
+                        </View>
 
-                            {this._renderOutsideTouchable(onTouchOutside)}
-                        </SafeAreaView>
+                        {this._renderOutsideTouchable(onTouchOutside)}
                     </View>
                 </ScrollView>
             </Modal>
         )
     }
+}
+
+Dialog.propTypes = {
+    dialogStyle: ViewPropTypes.style,
+    contentStyle: ViewPropTypes.style,
+    buttonsStyle: ViewPropTypes.style,
+    overlayStyle: ViewPropTypes.style,
+    buttons: PropTypes.element,
+    visible: PropTypes.bool,
+    onRequestClose: PropTypes.func,
+    onShow: PropTypes.func,
+    onTouchOutside: PropTypes.func,
+    title: PropTypes.string,
+    titleStyle: Text.propTypes.style,
+    keyboardDismissMode: PropTypes.string,
+    keyboardShouldPersistTaps: PropTypes.string,
+    contentInsetAdjustmentBehavior: PropTypes.string,
 }
 
 Dialog.defaultProps = {
